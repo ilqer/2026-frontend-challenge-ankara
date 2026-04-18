@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Calendar, MapPin, User, Link as LinkIcon, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 
-export function DetailDrawer({ isOpen, onClose, evidence, relatedEvidence = [] }) {
+export function DetailDrawer({ isOpen, onClose, evidence, relatedEvidence = [], onPersonClick }) {
   if (!evidence) return null;
 
   const timestamp = new Date(evidence.timestamp);
@@ -110,9 +110,12 @@ export function DetailDrawer({ isOpen, onClose, evidence, relatedEvidence = [] }
                       <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mb-1">
                         Person of Interest
                       </p>
-                      <p className="text-sm font-mono text-slate-200 dark:text-slate-200 light:text-slate-900">
+                      <button
+                        onClick={() => onPersonClick && onPersonClick(evidence.details.person)}
+                        className="text-sm font-mono text-cyan-400 hover:text-cyan-300 dark:text-cyan-400 hover:underline cursor-pointer border-none bg-transparent p-0 text-left"
+                      >
                         {evidence.details.person}
-                      </p>
+                      </button>
                       <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mt-1">
                         {evidence.details.occupation}
                       </p>
@@ -147,7 +150,10 @@ export function DetailDrawer({ isOpen, onClose, evidence, relatedEvidence = [] }
                     {evidence.details.reliability && (
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-500 dark:text-slate-500 light:text-slate-600">Reliability:</span>
-                        <span className="text-slate-300 dark:text-slate-300 light:text-slate-900 font-mono">{evidence.details.reliability}%</span>
+                        <span className="text-slate-300 dark:text-slate-300 light:text-slate-900 font-mono capitalize">
+                          {evidence.details.reliability}
+                          {!isNaN(Number(evidence.details.reliability)) ? '%' : ''}
+                        </span>
                       </div>
                     )}
                   </div>

@@ -40,7 +40,7 @@ export function SuspectCard({ suspect, onClick }) {
           </h3>
           <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 mt-0.5">
             <Briefcase className="w-3 h-3" />
-            {suspect.occupation || 'Unknown'}
+            {suspect.occupation || 'Person of Interest'}
           </div>
         </div>
       </div>

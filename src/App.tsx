@@ -7,7 +7,9 @@ import { DetailDrawer } from './components/DetailDrawer';
 import { TimelineView } from './views/TimelineView';
 import { MapView } from './views/MapView';
 import { SuspectsView } from './views/SuspectsView';
-import { Clock, Map, Users } from 'lucide-react';
+import { UsersView } from './views/UsersView';
+import { LocationsView } from './views/LocationsView';
+import { Clock, Map, Users, MapPin, UserSquare } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from './components/ui/tooltip';
@@ -17,6 +19,8 @@ const tabs = [
   { id: 'timeline', label: 'Timeline', icon: Clock },
   { id: 'map', label: 'Map Board', icon: Map },
   { id: 'suspects', label: 'Suspects', icon: Users },
+  { id: 'users', label: 'Users', icon: UserSquare },
+  { id: 'locations', label: 'Locations', icon: MapPin },
 ];
 
 function AppContent() {
@@ -32,12 +36,13 @@ function AppContent() {
   const relatedEvidence = useMemo(() => {
     if (!selectedEvidence) return [];
     
-    return evidence.filter(e => 
-      e.id !== selectedEvidence.id && (
-        e.details.person === selectedEvidence.details.person ||
-        e.details.location === selectedEvidence.details.location
-      )
-    );
+    return evidence.filter(e => {
+      const hasPerson = !!selectedEvidence.details.person;
+      if (hasPerson) {
+        return e.details.person === selectedEvidence.details.person;
+      }
+      return e.details.location === selectedEvidence.details.location;
+    });
   }, [selectedEvidence, evidence]);
 
   const handleEvidenceClick = (item: any) => {
@@ -137,6 +142,16 @@ function AppContent() {
               onSuspectClick={handleSuspectClick}
             />
           )}
+          {activeTab === 'users' && (
+            <UsersView
+              evidence={evidence}
+            />
+          )}
+          {activeTab === 'locations' && (
+            <LocationsView
+              evidence={evidence}
+            />
+          )}
         </div>
       </div>
 
@@ -176,12 +191,20 @@ function AppContent() {
         </SheetContent>
       </Sheet>
 
-      {/* Detail Drawer */}
+      {/* DetailDrawer */}
       <DetailDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         evidence={selectedEvidence}
         relatedEvidence={relatedEvidence}
+        onPersonClick={(personName) => {
+          setIsDrawerOpen(false);
+          setActiveTab('users');
+          // Use a timeout to ensure the tab switch has happened before we dispatch a custom event
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('selectUser', { detail: personName }));
+          }, 50);
+        }}
       />
     </div>
   );
