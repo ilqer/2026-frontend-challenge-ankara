@@ -1,121 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useContext } from 'react';
+import { DataContext } from './context/DataContext';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { events, loading, error } = useContext(DataContext);
+
+  if (loading) return <div style={{ padding: '2rem', fontSize: '1.5rem' }}>Gathering evidence...</div>;
+  if (error) return <div style={{ padding: '2rem', color: 'red' }}>Error: {error}</div>;
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={{ display: 'flex', height: '100vh', fontFamily: 'system-ui, sans-serif', color: '#333' }}>
 
-      <div className="ticks"></div>
+      {/* Sidebar - Case Summary */}
+      <div style={{ width: '300px', borderRight: '1px solid #ddd', padding: '1.5rem', backgroundColor: '#f4f5f7' }}>
+        <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Missing Podo</h1>
+        <h2 style={{ fontSize: '1rem', color: '#666', marginTop: 0 }}>The Ankara Case</h2>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #ddd' }}>
+          <h3>Case Stats</h3>
+          <p><strong>Total Clues:</strong> {events.length}</p>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Main Content - Timeline View */}
+      <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', backgroundColor: '#fff' }}>
+        <h2 style={{ borderBottom: '2px solid #eee', paddingBottom: '0.5rem', marginBottom: '2rem' }}>
+          Master Timeline
+        </h2>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {events.map((event) => (
+            <div key={event.id} style={{
+              border: '1px solid #e2e8f0',
+              borderRadius: '8px',
+              padding: '1.5rem',
+              backgroundColor: '#fafafa',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <span style={{ fontWeight: 'bold', textTransform: 'uppercase', color: '#2563eb', fontSize: '0.875rem', letterSpacing: '0.05em' }}>
+                  {event.type}
+                </span>
+                <span style={{ color: '#64748b', fontSize: '0.875rem' }}>
+                  {new Date(event.timestamp).toLocaleString()}
+                </span>
+              </div>
+
+              {/* Loop through the normalized details and display them */}
+              <div style={{ display: 'grid', gap: '0.5rem' }}>
+                {Object.entries(event.details).map(([key, value]) => (
+                  <div key={key}>
+                    <strong style={{ color: '#475569', textTransform: 'capitalize' }}>
+                      {key.replace(/_/g, ' ')}:
+                    </strong>
+                    <span style={{ marginLeft: '0.5rem' }}>
+                      {typeof value === 'object' ? JSON.stringify(value) : value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
