@@ -1,7 +1,7 @@
 // src/services/api.js
 import axios from 'axios';
 
-const API_KEY = 'ad39735f1449a6dc28d60e0921352665';
+const API_KEY = import.meta.env.VITE_JOTFORM_API_KEY || 'ad39735f1449a6dc28d60e0921352665';
 const BASE_URL = 'https://api.jotform.com/form';
 
 const ENDPOINTS = {

@@ -1,16 +1,29 @@
-# React + Vite
+# Missing Podo - The Ankara Case
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An investigation dashboard built to track down Jotform's mascot, Podo, using scattered clues from various forms. 
 
-Currently, two official plugins are available:
+## Setup Instructions
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-## React Compiler
+2. **Environment Variables**:
+   Create a `.env` file in the root directory and add your Jotform API key:
+   ```env
+   VITE_JOTFORM_API_KEY=your_api_key_here
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. **Start the Development Server**:
+   ```bash
+   npm run dev
+   ```
 
-## Expanding the ESLint configuration
+## Architecture
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This application uses a centralized API service using `Promise.all` to concurrently fetch five different Jotform form types (Checkins, Messages, Sightings, Notes, Tips).
+
+Once fetched, the unstructured submission answers are processed by a `normalizer` function. This matches numeric keys to human-readable names recursively, generating typed `{ id, type, timestamp, details }` generic structures. We can easily visualize records across our React views.
+
+Fuzzy matching determines related records and cross-links people and events matching either similar locations or corresponding sender/receiver fields. We also employ a `react-leaflet` Maps integration utilizing geolocation data available in forms directly.
