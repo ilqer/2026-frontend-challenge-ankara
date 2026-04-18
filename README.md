@@ -3,7 +3,7 @@
 User Information
 Please fill in your information after forking this repository:
 
-Name: [Your Name]
+Name: Altay İlker Yiğitel
 
 Project Description
 Podo Investigation - An interactive digital forensics and evidence-tracking application. It features a master suspect profiling board, chronological timeline analysis, an interactive evidence map, and relational tracking of suspects and locations to assist in solving the mystery. Built utilizing React, Vite, Tailwind CSS, and React Leaflet.
