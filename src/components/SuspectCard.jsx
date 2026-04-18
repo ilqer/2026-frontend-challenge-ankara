@@ -18,7 +18,7 @@ export function SuspectCard({ suspect, onClick }) {
       onClick={onClick}
       className={`
         cursor-pointer p-4 rounded-lg border ${colors.border}
-        bg-slate-900/50 dark:bg-slate-900/50 light:bg-white
+        bg-slate-900/50 dark:bg-slate-900/50 bg-white
         backdrop-blur-sm hover:shadow-xl transition-all
         hover:ring-2 ${colors.ring}
       `}
@@ -29,16 +29,16 @@ export function SuspectCard({ suspect, onClick }) {
           w-12 h-12 rounded-full flex items-center justify-center
           bg-gradient-to-br from-slate-700 to-slate-800
           dark:from-slate-700 dark:to-slate-800
-          light:from-slate-200 light:to-slate-300
-          font-mono text-lg text-slate-200 dark:text-slate-200 light:text-slate-700
+          from-slate-200 to-slate-300
+          font-mono text-lg text-slate-200 dark:text-slate-200 text-slate-700
         `}>
           {suspect?.name ? suspect.name.split(' ').map(n => n[0]).join('').substring(0, 2) : '?'}
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-slate-200 dark:text-slate-200 light:text-slate-900">
+          <h3 className="font-semibold text-slate-200 dark:text-slate-200 text-slate-900">
             {suspect.name}
           </h3>
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 mt-0.5">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-400 text-slate-600 mt-0.5">
             <Briefcase className="w-3 h-3" />
             {suspect.occupation || 'Person of Interest'}
           </div>
@@ -50,7 +50,7 @@ export function SuspectCard({ suspect, onClick }) {
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5">
             <AlertTriangle className={`w-3.5 h-3.5 ${colors.text}`} />
-            <span className="text-slate-400 dark:text-slate-400 light:text-slate-600">
+            <span className="text-slate-400 dark:text-slate-400 text-slate-600">
               Suspicion Level
             </span>
           </div>
@@ -58,7 +58,7 @@ export function SuspectCard({ suspect, onClick }) {
             {suspect.suspicionLevel || 0}%
           </span>
         </div>
-        <div className="h-2 bg-slate-800 dark:bg-slate-800 light:bg-slate-200 rounded-full overflow-hidden">
+        <div className="h-2 bg-slate-800 dark:bg-slate-800 bg-slate-200 rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${suspect.suspicionLevel || 0}%` }}
@@ -69,12 +69,12 @@ export function SuspectCard({ suspect, onClick }) {
       </div>
 
       {/* Evidence Count */}
-      <div className="mt-3 pt-3 border-t border-slate-800 dark:border-slate-800 light:border-slate-200">
+      <div className="mt-3 pt-3 border-t border-slate-800 dark:border-slate-800 border-slate-200">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-slate-500 dark:text-slate-500 light:text-slate-600">
+          <span className="text-slate-500 dark:text-slate-500 text-slate-600">
             Connected Evidence
           </span>
-          <span className="font-mono text-slate-400 dark:text-slate-400 light:text-slate-700 font-semibold">
+          <span className="font-mono text-slate-400 dark:text-slate-400 text-slate-700 font-semibold">
             {suspect.evidenceCount || Math.floor(1) + 3}
           </span>
         </div>

@@ -86,11 +86,11 @@ export function MapBoard({ evidence, onEvidenceClick }) {
       </MapContainer>
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-4 bg-slate-950/90 dark:bg-slate-950/90 light:bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-slate-800 dark:border-slate-800 light:border-slate-200 shadow-xl z-[1000]">
-        <h3 className="text-sm font-mono text-slate-400 dark:text-slate-400 light:text-slate-600 mb-2">
+      <div className="absolute bottom-4 left-4 bg-slate-950/90 dark:bg-slate-950/90 bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-slate-800 dark:border-slate-800 border-slate-200 shadow-xl z-[1000]">
+        <h3 className="text-sm font-mono text-slate-400 dark:text-slate-400 text-slate-600 mb-2">
           Evidence Markers
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-700">
+        <p className="text-xs text-slate-500 dark:text-slate-500 text-slate-700">
           {groupedLocations.length} locations plotted
         </p>
       </div>

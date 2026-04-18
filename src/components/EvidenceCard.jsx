@@ -73,8 +73,8 @@ export function EvidenceCard({ evidence, onClick }) {
       onClick={onClick}
       className={`
         cursor-pointer p-4 rounded-lg border
-        ${config.bgDark} dark:${config.bgDark} light:${config.bgLight}
-        ${config.borderDark} dark:${config.borderDark} light:${config.borderLight}
+        ${config.bgDark} dark:${config.bgDark} ${config.bgLight}
+        ${config.borderDark} dark:${config.borderDark} ${config.borderLight}
         backdrop-blur-sm hover:shadow-lg transition-all
       `}
     >
@@ -86,20 +86,20 @@ export function EvidenceCard({ evidence, onClick }) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-slate-200 dark:text-slate-200 light:text-slate-900">
+              <span className="text-sm font-semibold text-slate-200 dark:text-slate-200 text-slate-900">
                 {config.label}
               </span>
               {evidence.details.suspicionLevel > 75 && (
                 <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
               )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mt-0.5">
+            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-500 text-slate-600 mt-0.5">
               <Clock className="w-3 h-3" />
               {format(timestamp, 'MMM dd, yyyy • HH:mm')}
             </div>
           </div>
         </div>
-        <span className="text-xs font-mono text-slate-600 dark:text-slate-600 light:text-slate-500">
+        <span className="text-xs font-mono text-slate-600 dark:text-slate-600 text-slate-500">
           #{evidence.id.split('-')[1]}
         </span>
       </div>
@@ -107,26 +107,26 @@ export function EvidenceCard({ evidence, onClick }) {
       {/* Content */}
       <div className="mb-3">
         {(evidence.type === 'message' || evidence.type === 'messages') && evidence.details.sender && evidence.details.recipient && (
-          <div className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 mb-1">
-            From <span className="font-semibold text-slate-300 dark:text-slate-300 light:text-slate-700">{evidence.details.sender}</span> to <span className="font-semibold text-slate-300 dark:text-slate-300 light:text-slate-700">{evidence.details.recipient}</span>
+          <div className="text-xs text-slate-400 dark:text-slate-400 text-slate-600 mb-1">
+            From <span className="font-semibold text-slate-300 dark:text-slate-300 text-slate-700">{evidence.details.sender}</span> to <span className="font-semibold text-slate-300 dark:text-slate-300 text-slate-700">{evidence.details.recipient}</span>
           </div>
         )}
-        <p className="text-sm text-slate-300 dark:text-slate-300 light:text-slate-700 line-clamp-2">
+        <p className="text-sm text-slate-300 dark:text-slate-300 text-slate-700 line-clamp-2">
           {evidence.details.content}
         </p>
       </div>
 
       {/* Footer Metadata */}
-      <div className="flex items-center justify-between pt-3 border-t border-slate-800 dark:border-slate-800 light:border-slate-200">
+      <div className="flex items-center justify-between pt-3 border-t border-slate-800 dark:border-slate-800 border-slate-200">
         <div className="flex items-center gap-2">
-          <User className="w-3.5 h-3.5 text-slate-500 dark:text-slate-500 light:text-slate-600" />
-          <span className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600">
+          <User className="w-3.5 h-3.5 text-slate-500 dark:text-slate-500 text-slate-600" />
+          <span className="text-xs text-slate-400 dark:text-slate-400 text-slate-600">
             {evidence.details.person}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <MapPin className="w-3.5 h-3.5 text-slate-500 dark:text-slate-500 light:text-slate-600" />
-          <span className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600">
+          <MapPin className="w-3.5 h-3.5 text-slate-500 dark:text-slate-500 text-slate-600" />
+          <span className="text-xs text-slate-400 dark:text-slate-400 text-slate-600">
             {evidence.details.location}
           </span>
         </div>

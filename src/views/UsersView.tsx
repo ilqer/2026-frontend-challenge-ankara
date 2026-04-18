@@ -63,6 +63,7 @@ export function UsersView({ evidence }: { evidence: any[] }) {
         {selectedPerson ? (
           <ProfilePage
             person={selectedPerson}
+            validPersonNames={people.map((p: any) => p.name)}
             onPersonClick={(id, name) => setSelectedPersonId(name)}
             onLocationClick={(loc) => {
               window.dispatchEvent(new CustomEvent('navigateTab', { detail: 'locations' }));

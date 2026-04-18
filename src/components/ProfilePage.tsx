@@ -8,11 +8,12 @@ interface ProfilePageProps {
   person: Person;
   onPersonClick: (personId: string, personName: string) => void;
   onLocationClick?: (locationName: string) => void;
+  validPersonNames?: string[];
 }
 
 type FilterTab = 'all' | 'checkins' | 'messages' | 'sightings' | 'notes' | 'tips';
 
-export function ProfilePage({ person, onPersonClick, onLocationClick }: ProfilePageProps) {
+export function ProfilePage({ person, onPersonClick, onLocationClick, validPersonNames }: ProfilePageProps) {
   const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
 
   const getStatusLabel = (status: Person['status']) => {
@@ -55,7 +56,7 @@ export function ProfilePage({ person, onPersonClick, onLocationClick }: ProfileP
     person.activities.forEach(a => {
       const people = [a.sender, a.receiver, a.seenWith].filter(Boolean);
       people.forEach(p => {
-        if (p && p !== person.name && !['unknown', 'event staff'].includes(p.toLowerCase())) {
+        if (p && p !== person.name && (!validPersonNames || validPersonNames.includes(p))) {
           connections.set(p, (connections.get(p) || 0) + 1);
         }
       });

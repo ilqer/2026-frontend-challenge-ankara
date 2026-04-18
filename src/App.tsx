@@ -69,7 +69,7 @@ function AppContent() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-slate-950 dark:bg-slate-950 light:bg-slate-50">
+    <div className="h-screen flex flex-col bg-slate-950 dark:bg-slate-950 bg-slate-50">
       <Header
         onToggleNavigation={() => {
           if (isMobile) {
@@ -83,7 +83,7 @@ function AppContent() {
       <div className="flex flex-1 min-h-0">
         {/* Desktop Sidebar Navigation */}
         <aside
-          className={`hidden md:flex shrink-0 border-r border-slate-800 dark:border-slate-800 light:border-slate-200 bg-slate-950 dark:bg-slate-950 light:bg-white transition-all duration-300 ${
+          className={`hidden md:flex shrink-0 border-r border-slate-800 dark:border-slate-800 border-slate-200 bg-slate-950 dark:bg-slate-950 bg-white transition-all duration-300 ${
             isNavCollapsed ? 'w-16' : 'w-64'
           }`}
         >
@@ -99,7 +99,7 @@ function AppContent() {
                   className={`relative w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-mono transition-all ${
                     isActive
                       ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
-                      : 'text-slate-400 hover:bg-slate-900 dark:hover:bg-slate-900 light:hover:bg-slate-100 hover:text-slate-200 dark:hover:text-slate-200 light:hover:text-slate-900'
+                      : 'text-slate-400 hover:bg-slate-900 dark:hover:bg-slate-900 hover:bg-slate-100 hover:text-slate-200 dark:hover:text-slate-200 hover:text-slate-900'
                   }`}
                 >
                   {isActive && (
@@ -129,7 +129,7 @@ function AppContent() {
         </aside>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-hidden relative flex flex-col bg-slate-950 dark:bg-slate-950 light:bg-slate-50">
+        <div className="flex-1 overflow-hidden relative flex flex-col bg-slate-950 dark:bg-slate-950 bg-slate-50">
           {activeTab === 'timeline' && (
             <TimelineView
               evidence={evidence}
@@ -203,6 +203,7 @@ function AppContent() {
         onClose={() => setIsDrawerOpen(false)}
         evidence={selectedEvidence}
         relatedEvidence={relatedEvidence}
+        onEvidenceClick={handleEvidenceClick}
         onPersonClick={(personName) => {
           setIsDrawerOpen(false);
           setActiveTab('users');

@@ -26,7 +26,7 @@ export function FilterChips({ activeFilter, onFilterChange }) {
               flex items-center gap-2 transition-all
               ${isActive 
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/30' 
-                : 'bg-slate-900 dark:bg-slate-900 light:bg-slate-100 text-slate-400 dark:text-slate-400 light:text-slate-600 hover:bg-slate-800 dark:hover:bg-slate-800 light:hover:bg-slate-200 border border-slate-800 dark:border-slate-800 light:border-slate-300'
+                : 'bg-slate-900 dark:bg-slate-900 bg-slate-100 text-slate-400 dark:text-slate-400 text-slate-600 hover:bg-slate-800 dark:hover:bg-slate-800 hover:bg-slate-200 border border-slate-800 dark:border-slate-800 border-slate-300'
               }
             `}
             whileHover={{ scale: 1.05 }}

@@ -65,7 +65,7 @@ export function TimelineView({ evidence, onEvidenceClick }) {
   return (
     <div className="flex-1 flex flex-col min-h-0">
       {/* Search and Filters */}
-      <div className="p-6 space-y-4 border-b border-slate-800 dark:border-slate-800 light:border-slate-200">
+      <div className="p-6 space-y-4 border-b border-slate-800 dark:border-slate-800 border-slate-200">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
         <div className="flex flex-wrap items-center gap-2">
           <FacetedFilter
@@ -103,11 +103,11 @@ export function TimelineView({ evidence, onEvidenceClick }) {
 
         {/* Results Count */}
         <div className="flex items-center justify-between">
-          <p className="text-sm text-slate-500 dark:text-slate-500 light:text-slate-600 font-mono">
+          <p className="text-sm text-slate-500 dark:text-slate-500 text-slate-600 font-mono">
             {filteredEvidence.length} {filteredEvidence.length === 1 ? 'record' : 'records'} found
           </p>
           {searchQuery && (
-            <p className="text-xs text-cyan-400 dark:text-cyan-400 light:text-cyan-600 font-mono">
+            <p className="text-xs text-cyan-400 dark:text-cyan-400 text-cyan-600 font-mono">
               Searching: "{searchQuery}"
             </p>
           )}
@@ -118,11 +118,11 @@ export function TimelineView({ evidence, onEvidenceClick }) {
       <div data-scroll-container="true" className="flex-1 overflow-y-auto p-6">
         {filteredEvidence.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <FileSearch className="w-16 h-16 text-slate-700 dark:text-slate-700 light:text-slate-300 mb-4" />
-            <h3 className="text-lg font-mono text-slate-400 dark:text-slate-400 light:text-slate-600 mb-2">
+            <FileSearch className="w-16 h-16 text-slate-700 dark:text-slate-700 text-slate-300 mb-4" />
+            <h3 className="text-lg font-mono text-slate-400 dark:text-slate-400 text-slate-600 mb-2">
               No Evidence Found
             </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-600 light:text-slate-500">
+            <p className="text-sm text-slate-600 dark:text-slate-600 text-slate-500">
               Try adjusting your filters or search query
             </p>
           </div>

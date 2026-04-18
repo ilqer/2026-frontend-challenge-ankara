@@ -86,14 +86,14 @@ export function SuspectsView({ evidence, onSuspectClick }) {
   return (
     <div className="flex-1 flex flex-col min-h-0">
       {/* Header */}
-      <div className="shrink-0 p-6 border-b border-slate-800 dark:border-slate-800 light:border-slate-200 space-y-4">
+      <div className="shrink-0 p-6 border-b border-slate-800 dark:border-slate-800 border-slate-200 space-y-4">
         <div className="flex items-center gap-3">
-          <Users className="w-6 h-6 text-cyan-400 dark:text-cyan-400 light:text-cyan-600" />
+          <Users className="w-6 h-6 text-cyan-400 dark:text-cyan-400 text-cyan-600" />
           <div>
-            <h2 className="text-xl font-mono text-slate-200 dark:text-slate-200 light:text-slate-900">
+            <h2 className="text-xl font-mono text-slate-200 dark:text-slate-200 text-slate-900">
               Persons of Interest
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-500 light:text-slate-600">
+            <p className="text-sm text-slate-500 dark:text-slate-500 text-slate-600">
               {suspects.length} suspects identified
             </p>
           </div>
@@ -131,10 +131,10 @@ export function SuspectsView({ evidence, onSuspectClick }) {
       <div data-scroll-container="true" className="flex-1 overflow-y-auto">
         {/* Most Suspicious Panel */}
         {!searchQuery && topSuspects.length > 0 && (
-          <div className="p-6 border-b border-slate-800 dark:border-slate-800 light:border-slate-200 bg-red-500/5 dark:bg-red-500/5 light:bg-red-50">
+          <div className="p-6 border-b border-slate-800 dark:border-slate-800 border-slate-200 bg-red-500/5 dark:bg-red-500/5 bg-red-50">
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5 text-red-400 dark:text-red-400 light:text-red-600" />
-              <h3 className="text-sm font-mono text-red-400 dark:text-red-400 light:text-red-600 uppercase">
+              <TrendingUp className="w-5 h-5 text-red-400 dark:text-red-400 text-red-600" />
+              <h3 className="text-sm font-mono text-red-400 dark:text-red-400 text-red-600 uppercase">
                 Most Suspicious
               </h3>
             </div>
@@ -176,11 +176,11 @@ export function SuspectsView({ evidence, onSuspectClick }) {
 
           {filteredSuspects.length === 0 && (
             <div className="flex flex-col items-center justify-center p-12 text-center">
-              <Users className="w-16 h-16 text-slate-700 dark:text-slate-700 light:text-slate-300 mb-4" />
-              <h3 className="text-lg font-mono text-slate-400 dark:text-slate-400 light:text-slate-600 mb-2">
+              <Users className="w-16 h-16 text-slate-700 dark:text-slate-700 text-slate-300 mb-4" />
+              <h3 className="text-lg font-mono text-slate-400 dark:text-slate-400 text-slate-600 mb-2">
                 No Suspects Found
               </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-600 light:text-slate-500">
+              <p className="text-sm text-slate-600 dark:text-slate-600 text-slate-500">
                 Try adjusting your search query
               </p>
             </div>
