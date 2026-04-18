@@ -11,8 +11,9 @@ Podo Investigation - An interactive digital forensics and evidence-tracking appl
 Getting Started
 Follow these steps to set up and run the project locally:
 1. Open up your terminal and run `npm install` inside the project folder to install dependencies.
-2. Next, run `npm run dev` to start the frontend development server.
-3. Finally, open your web browser and navigate to `http://localhost:5173` to explore your application.
+2. add env file with VITE_JOTFORM_API_KEY
+3. Next, run `npm run dev` to start the frontend development server.
+4. Finally, open your web browser and navigate to `http://localhost:5173` to explore your application.
 
 🚀 Challenge Duyurusu
 
