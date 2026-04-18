@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { DataProvider, useData } from './context/DataContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Header } from './components/Header';
@@ -31,6 +31,12 @@ function AppContent() {
   const [isNavCollapsed, setIsNavCollapsed] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const handleNavTab = (e: any) => setActiveTab(e.detail);
+    window.addEventListener('navigateTab', handleNavTab);
+    return () => window.removeEventListener('navigateTab', handleNavTab);
+  }, []);
 
   // Calculate related evidence based on shared person or location
   const relatedEvidence = useMemo(() => {

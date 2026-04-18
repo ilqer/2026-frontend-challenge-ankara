@@ -7,11 +7,12 @@ import { format } from 'date-fns';
 interface ProfilePageProps {
   person: Person;
   onPersonClick: (personId: string, personName: string) => void;
+  onLocationClick?: (locationName: string) => void;
 }
 
 type FilterTab = 'all' | 'checkins' | 'messages' | 'sightings' | 'notes' | 'tips';
 
-export function ProfilePage({ person, onPersonClick }: ProfilePageProps) {
+export function ProfilePage({ person, onPersonClick, onLocationClick }: ProfilePageProps) {
   const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
 
   const getStatusLabel = (status: Person['status']) => {
@@ -44,6 +45,10 @@ export function ProfilePage({ person, onPersonClick }: ProfilePageProps) {
     notes: person.activities.filter(a => a.type === 'notes' || a.type === 'note').length,
     tips: person.activities.filter(a => a.type === 'tips' || a.type === 'tip').length,
   };
+
+  const dates = person.activities.map(a => new Date(a.timestamp).getTime()).filter(d => !isNaN(d));
+  const firstSeen = dates.length ? new Date(Math.min(...dates)) : null;
+  const lastSeen = dates.length ? new Date(Math.max(...dates)) : null;
 
   // Filter activities
   const filteredActivities = person.activities.filter(activity => {
@@ -92,27 +97,52 @@ export function ProfilePage({ person, onPersonClick }: ProfilePageProps) {
             {/* Info */}
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-slate-900 dark:text-slate-100">{person.name}</h1>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{person.name}</h1>
                 <Badge className={getStatusColor(person.status)}>
                   {getStatusLabel(person.status)}
                 </Badge>
               </div>
 
+              {/* Time Clues */}
+              <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400 mb-3">
+                {firstSeen && (
+                  <span>First seen: {format(firstSeen, 'MMM d, yyyy h:mm a')}</span>
+                )}
+                {lastSeen && (
+                  <>
+                    <span className="text-slate-300 dark:text-slate-600">|</span>
+                    <span>Last seen: {format(lastSeen, 'MMM d, yyyy h:mm a')}</span>
+                  </>
+                )}
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <span className="font-semibold text-cyan-600 dark:text-cyan-400">Total Clues: {person.activities.length}</span>
+              </div>
+
               {/* Quick Stats */}
-              <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4" />
+                  <MapPin className="w-4 h-4 text-green-500" />
                   <span>{stats.checkins} Check-ins</span>
                 </div>
                 <span className="text-slate-300 dark:text-slate-600">|</span>
                 <div className="flex items-center gap-1.5">
-                  <MessageSquare className="w-4 h-4" />
+                  <MessageSquare className="w-4 h-4 text-blue-500" />
                   <span>{stats.messages} Messages</span>
                 </div>
                 <span className="text-slate-300 dark:text-slate-600">|</span>
                 <div className="flex items-center gap-1.5">
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-4 h-4 text-amber-500" />
                   <span>{stats.sightings} Sightings</span>
+                </div>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <div className="flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-slate-500" />
+                  <span>{stats.notes} Notes</span>
+                </div>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <div className="flex items-center gap-1.5">
+                  <Lightbulb className="w-4 h-4 text-teal-500" />
+                  <span>{stats.tips} Tips</span>
                 </div>
               </div>
             </div>
@@ -162,6 +192,7 @@ export function ProfilePage({ person, onPersonClick }: ProfilePageProps) {
                   key={activity.id}
                   activity={activity}
                   onPersonClick={handlePersonLinkClick}
+                  onLocationClick={onLocationClick}
                 />
               ))
             )}
@@ -175,9 +206,10 @@ export function ProfilePage({ person, onPersonClick }: ProfilePageProps) {
 interface TimelineItemProps {
   activity: TimelineActivity;
   onPersonClick: (personName: string) => void;
+  onLocationClick?: (locationName: string) => void;
 }
 
-function TimelineItem({ activity, onPersonClick }: TimelineItemProps) {
+function TimelineItem({ activity, onPersonClick, onLocationClick }: TimelineItemProps) {
   const getIcon = () => {
     switch (activity.type) {
       case 'checkins':
@@ -240,7 +272,7 @@ function TimelineItem({ activity, onPersonClick }: TimelineItemProps) {
         return 'Investigation Note';
       case 'tips':
       case 'tip':
-        return 'Anonymous Tip';
+        return 'Tip';
       default:
         return 'Activity';
     }
@@ -264,40 +296,42 @@ function TimelineItem({ activity, onPersonClick }: TimelineItemProps) {
               <span>{format(new Date(activity.timestamp), 'MMM d, yyyy h:mm a')}</span>
             </div>
           </div>
-          {activity.suspicionLevel && (
-            <Badge className={
-              activity.suspicionLevel === 'high'
-                ? 'bg-red-100 text-red-700 border-red-300'
-                : 'bg-amber-100 text-amber-700 border-amber-300'
-            }>
-              <AlertTriangle className="w-3 h-3 mr-1" />
-              {activity.suspicionLevel === 'high' ? 'HIGH ALERT' : 'SUSPICIOUS'}
-            </Badge>
-          )}
         </div>
 
         {/* Content */}
         <div className="space-y-2">
           {activity.location && (
             <div className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-slate-400 mt-0.5" />
-              <span className="text-slate-700 dark:text-slate-300">{activity.location}</span>
+              <MapPin className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+              <button
+                onClick={() => onLocationClick && onLocationClick(activity.location!)}
+                className="text-left text-slate-700 dark:text-slate-300 font-medium hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+              >
+                {activity.location}
+              </button>
             </div>
           )}
 
           {activity.message && (
             <div className="bg-slate-50 dark:bg-[#1C1F26] rounded-lg p-3 border border-slate-100 dark:border-slate-800">
-              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-2 flex flex-wrap items-center gap-1.5">
                 {activity.sender && activity.receiver && (
-                  <span>
-                    From <strong>{activity.sender}</strong> to{' '}
+                  <>
+                    <span>From</span>
+                    <button
+                      onClick={() => onPersonClick(activity.sender!)}
+                      className="px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors"
+                    >
+                      {activity.sender}
+                    </button>
+                    <span>to</span>
                     <button
                       onClick={() => onPersonClick(activity.receiver!)}
-                      className="text-blue-600 hover:text-blue-700 hover:underline font-semibold"
+                      className="px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors"
                     >
                       {activity.receiver}
                     </button>
-                  </span>
+                  </>
                 )}
               </div>
               <p className="text-slate-700 dark:text-slate-300 italic">"{activity.message}"</p>
@@ -305,22 +339,20 @@ function TimelineItem({ activity, onPersonClick }: TimelineItemProps) {
           )}
 
           {activity.seenWith && (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5 mt-2">
               <Eye className="w-4 h-4 text-slate-400" />
-              <span className="text-slate-700 dark:text-slate-300">
-                Seen with{' '}
-                <button
-                  onClick={() => onPersonClick(activity.seenWith!)}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-md hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors font-medium"
-                >
-                  {activity.seenWith}
-                </button>
-              </span>
+              <span className="text-slate-600 dark:text-slate-400 text-sm">Seen with</span>
+              <button
+                onClick={() => onPersonClick(activity.seenWith!)}
+                className="px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors"
+              >
+                {activity.seenWith}
+              </button>
             </div>
           )}
 
-          {activity.note && (
-            <div className="text-slate-700 dark:text-slate-300">
+          {activity.note && activity.note !== activity.message && (
+            <div className="text-slate-700 dark:text-slate-300 mt-2">
               <p>{activity.note}</p>
             </div>
           )}

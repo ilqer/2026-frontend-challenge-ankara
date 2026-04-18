@@ -41,6 +41,24 @@ export function useData() {
   return context;
 }
 
+const normalizeName = (name: string): string => {
+  if (!name) return name;
+
+  // Custom normalization rules for known variants
+  const n = name.trim();
+  if (n.match(/kagan/i) || n.match(/kağan/i)) return 'Kağan';
+  if (n.match(/gülşah/i) || n.match(/gulsah/i)) return 'Gülşah';
+
+  return n
+    .replace(/\s+/g, ' ')
+    .split(' ')
+    .map(word => {
+      if (word.length === 0) return word;
+      return word.charAt(0).toLocaleUpperCase('tr-TR') + word.slice(1).toLocaleLowerCase('tr-TR');
+    })
+    .join(' ');
+};
+
 export function DataProvider({ children }: { children: ReactNode }) {
   const [evidence, setEvidence] = useState<Evidence[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,17 +80,23 @@ export function DataProvider({ children }: { children: ReactNode }) {
              }
           }
 
+          let personRaw = evt.details.person || evt.details.personName || evt.details.suspectName || evt.details.senderName || evt.details.authorName || evt.details.name || 'Unknown';
+          const person = personRaw === 'Unknown' ? personRaw : normalizeName(personRaw);
+          const sender = evt.details.senderName || evt.details.authorName || evt.details.sender;
+          const recipient = evt.details.recipientName || evt.details.seenWith || evt.details.mentionedPeople || evt.details.recipient || evt.details.receiver;
+
           return {
             id: evt.id,
             type: evt.type,
             timestamp: evt.timestamp,
             details: {
               ...evt.details,
-              person: evt.details.person || evt.details.personName || evt.details.suspectName || evt.details.senderName || evt.details.authorName || evt.details.name || 'Unknown',
+              person: person,
               content: evt.details.note || evt.details.tip || evt.details.text || evt.details.message || '',
               coordinates: coords,
-              sender: evt.details.senderName || evt.details.authorName,
-              recipient: evt.details.recipientName || evt.details.seenWith || evt.details.mentionedPeople,
+              sender: sender ? normalizeName(sender) : sender,
+              recipient: recipient ? normalizeName(recipient) : recipient,
+              seen_with: evt.details.seen_with ? normalizeName(evt.details.seen_with) : evt.details.seen_with,
               reliability: evt.details.confidence || evt.details.urgency,
             }
           };

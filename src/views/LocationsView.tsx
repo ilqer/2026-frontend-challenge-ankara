@@ -1,10 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { PersonList } from '../components/PersonList';
 import { ProfilePage } from '../components/ProfilePage';
 import { EmptyState } from '../components/EmptyState';
 
 export function LocationsView({ evidence }: { evidence: any[] }) {
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleSelectLocation = (e: any) => {
+      setSelectedLocationId(e.detail);
+    };
+    window.addEventListener('selectLocation', handleSelectLocation);
+    return () => window.removeEventListener('selectLocation', handleSelectLocation);
+  }, []);
 
   const locations = useMemo(() => {
     const lMap = new Map();
@@ -55,7 +63,13 @@ export function LocationsView({ evidence }: { evidence: any[] }) {
         {selectedLocation ? (
           <ProfilePage
             person={selectedLocation}
-            onPersonClick={(id, name) => {}} // Could link to UsersView if we passed a callback, but keeping it simple
+            onPersonClick={(id, name) => {
+              window.dispatchEvent(new CustomEvent('navigateTab', { detail: 'users' }));
+              setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('selectUser', { detail: name }));
+              }, 50);
+            }}
+            onLocationClick={(loc) => setSelectedLocationId(loc)}
           />
         ) : (
           <EmptyState />
@@ -64,4 +78,3 @@ export function LocationsView({ evidence }: { evidence: any[] }) {
     </div>
   );
 }
-

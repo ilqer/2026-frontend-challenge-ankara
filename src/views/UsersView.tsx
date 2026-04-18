@@ -45,7 +45,7 @@ export function UsersView({ evidence }: { evidence: any[] }) {
       });
       pMap.set(p, person);
     });
-    return Array.from(pMap.values());
+    return Array.from(pMap.values()).sort((a: any, b: any) => b.recordCount - a.recordCount);
   }, [evidence]);
 
   const selectedPerson = people.find(p => p.id === selectedPersonId);
@@ -64,6 +64,12 @@ export function UsersView({ evidence }: { evidence: any[] }) {
           <ProfilePage
             person={selectedPerson}
             onPersonClick={(id, name) => setSelectedPersonId(name)}
+            onLocationClick={(loc) => {
+              window.dispatchEvent(new CustomEvent('navigateTab', { detail: 'locations' }));
+              setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('selectLocation', { detail: loc }));
+              }, 50);
+            }}
           />
         ) : (
           <EmptyState />
@@ -72,4 +78,3 @@ export function UsersView({ evidence }: { evidence: any[] }) {
     </div>
   );
 }
-

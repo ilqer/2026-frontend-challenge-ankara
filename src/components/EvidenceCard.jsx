@@ -105,9 +105,16 @@ export function EvidenceCard({ evidence, onClick }) {
       </div>
 
       {/* Content */}
-      <p className="text-sm text-slate-300 dark:text-slate-300 light:text-slate-700 mb-3 line-clamp-2">
-        {evidence.details.content}
-      </p>
+      <div className="mb-3">
+        {(evidence.type === 'message' || evidence.type === 'messages') && evidence.details.sender && evidence.details.recipient && (
+          <div className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 mb-1">
+            From <span className="font-semibold text-slate-300 dark:text-slate-300 light:text-slate-700">{evidence.details.sender}</span> to <span className="font-semibold text-slate-300 dark:text-slate-300 light:text-slate-700">{evidence.details.recipient}</span>
+          </div>
+        )}
+        <p className="text-sm text-slate-300 dark:text-slate-300 light:text-slate-700 line-clamp-2">
+          {evidence.details.content}
+        </p>
+      </div>
 
       {/* Footer Metadata */}
       <div className="flex items-center justify-between pt-3 border-t border-slate-800 dark:border-slate-800 light:border-slate-200">
