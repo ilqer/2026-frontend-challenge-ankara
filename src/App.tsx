@@ -211,6 +211,13 @@ function AppContent() {
             window.dispatchEvent(new CustomEvent('selectUser', { detail: personName }));
           }, 50);
         }}
+        onLocationClick={(locationName) => {
+          setIsDrawerOpen(false);
+          setActiveTab('locations');
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('selectLocation', { detail: locationName }));
+          }, 50);
+        }}
       />
     </div>
   );

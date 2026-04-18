@@ -18,7 +18,7 @@ export function UsersView({ evidence }: { evidence: any[] }) {
     const pMap = new Map();
     evidence.forEach((e: any) => {
       const p = e.details.person || e.details.sender || e.details.receiver;
-      if (!p) return;
+      if (!p || ["unknown", "event staff"].includes(p.toLowerCase())) return;
       if (!pMap.has(p)) {
         pMap.set(p, {
           id: p,

@@ -43,7 +43,7 @@ export function FacetedFilter({
         <Button
           variant='outline'
           size='sm'
-          className='h-8 border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white'
+          className='h-8 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
         >
           <Filter className='h-3.5 w-3.5' />
           <span>{title}</span>

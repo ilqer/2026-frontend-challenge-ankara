@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Calendar, MapPin, User, Link as LinkIcon, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 
-export function DetailDrawer({ isOpen, onClose, evidence, relatedEvidence = [], onPersonClick }) {
+export function DetailDrawer({ isOpen, onClose, evidence, relatedEvidence = [], onPersonClick, onLocationClick }) {
   if (!evidence) return null;
 
   const timestamp = new Date(evidence.timestamp);
@@ -90,59 +90,85 @@ export function DetailDrawer({ isOpen, onClose, evidence, relatedEvidence = [], 
                   <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-900/50 dark:bg-slate-900/50 light:bg-slate-50">
                     <MapPin className="w-4 h-4 text-cyan-400 dark:text-cyan-400 light:text-cyan-600 mt-0.5" />
                     <div className="flex-1">
-                      <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mb-1">
+                      <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mb-2">
                         Location
                       </p>
-                      <p className="text-sm font-mono text-slate-200 dark:text-slate-200 light:text-slate-900">
+                      <button
+                        onClick={() => onLocationClick && onLocationClick(evidence.details.location)}
+                        className="text-left font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
+                      >
                         {evidence.details.location}
-                      </p>
+                      </button>
                       {evidence.details.coordinates && (
-                        <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mt-1 font-mono">
+                        <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mt-2 font-mono">
                           {evidence.details.coordinates[0].toFixed(4)}, {evidence.details.coordinates[1].toFixed(4)}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-900/50 dark:bg-slate-900/50 light:bg-slate-50">
-                    <User className="w-4 h-4 text-cyan-400 dark:text-cyan-400 light:text-cyan-600 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mb-1">
-                        Person of Interest
-                      </p>
-                      <button
-                        onClick={() => onPersonClick && onPersonClick(evidence.details.person)}
-                        className="text-sm font-mono text-cyan-400 hover:text-cyan-300 dark:text-cyan-400 hover:underline cursor-pointer border-none bg-transparent p-0 text-left"
-                      >
-                        {evidence.details.person}
-                      </button>
-                      <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mt-1">
-                        {evidence.details.occupation}
-                      </p>
+                  {evidence.details.person && (
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-900/50 dark:bg-slate-900/50 light:bg-slate-50">
+                      <User className="w-4 h-4 text-cyan-400 dark:text-cyan-400 light:text-cyan-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mb-2">
+                          Person of Interest
+                        </p>
+                        <button
+                          onClick={() => onPersonClick && onPersonClick(evidence.details.person)}
+                          className="text-left font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
+                        >
+                          {evidence.details.person}
+                        </button>
+                        <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-600 mt-2">
+                          {evidence.details.occupation}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Additional Details */}
-                {(evidence.details.sender || evidence.details.recipient || evidence.details.duration || evidence.details.reliability) && (
-                  <div className="p-4 rounded-lg border border-slate-800 dark:border-slate-800 light:border-slate-200 space-y-2">
-                    <h3 className="text-sm font-mono text-slate-400 dark:text-slate-400 light:text-slate-600 mb-3">
+                {(evidence.details.sender || evidence.details.recipient || evidence.details.duration || evidence.details.reliability || evidence.details.seen_with) && (
+                  <div className="p-4 rounded-lg border border-slate-800 dark:border-slate-800 light:border-slate-200 space-y-3">
+                    <h3 className="text-sm font-mono text-slate-400 dark:text-slate-400 light:text-slate-600 mb-4">
                       Additional Information
                     </h3>
                     {evidence.details.sender && (
-                      <div className="flex justify-between text-sm">
+                      <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500 dark:text-slate-500 light:text-slate-600">Sender:</span>
-                        <span className="text-slate-300 dark:text-slate-300 light:text-slate-900 font-mono">{evidence.details.sender}</span>
+                        <button
+                          onClick={() => onPersonClick && onPersonClick(evidence.details.sender)}
+                          className="text-left font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
+                        >
+                          {evidence.details.sender}
+                        </button>
                       </div>
                     )}
                     {evidence.details.recipient && (
-                      <div className="flex justify-between text-sm">
+                      <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500 dark:text-slate-500 light:text-slate-600">Recipient:</span>
-                        <span className="text-slate-300 dark:text-slate-300 light:text-slate-900 font-mono">{evidence.details.recipient}</span>
+                        <button
+                          onClick={() => onPersonClick && onPersonClick(evidence.details.recipient)}
+                          className="text-left font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
+                        >
+                          {evidence.details.recipient}
+                        </button>
+                      </div>
+                    )}
+                    {evidence.details.seen_with && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-slate-500 dark:text-slate-500 light:text-slate-600">Seen With:</span>
+                        <button
+                          onClick={() => onPersonClick && onPersonClick(evidence.details.seen_with)}
+                          className="text-left font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
+                        >
+                          {evidence.details.seen_with}
+                        </button>
                       </div>
                     )}
                     {evidence.details.duration && (
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-sm mt-3">
                         <span className="text-slate-500 dark:text-slate-500 light:text-slate-600">Duration:</span>
                         <span className="text-slate-300 dark:text-slate-300 light:text-slate-900 font-mono">{evidence.details.duration}</span>
                       </div>

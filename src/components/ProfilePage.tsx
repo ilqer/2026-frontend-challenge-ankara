@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { MapPin, MessageSquare, Eye, FileText, Clock, AlertTriangle, Lightbulb } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { MapPin, MessageSquare, Eye, FileText, Clock, AlertTriangle, Lightbulb, User } from 'lucide-react';
 import { Person, TimelineActivity } from '../types';
 import { Badge } from './ui/badge';
 import { format } from 'date-fns';
@@ -49,6 +49,21 @@ export function ProfilePage({ person, onPersonClick, onLocationClick }: ProfileP
   const dates = person.activities.map(a => new Date(a.timestamp).getTime()).filter(d => !isNaN(d));
   const firstSeen = dates.length ? new Date(Math.min(...dates)) : null;
   const lastSeen = dates.length ? new Date(Math.max(...dates)) : null;
+
+  const connectedPersons = useMemo(() => {
+    const connections = new Map<string, number>();
+    person.activities.forEach(a => {
+      const people = [a.sender, a.receiver, a.seenWith].filter(Boolean);
+      people.forEach(p => {
+        if (p && p !== person.name && !['unknown', 'event staff'].includes(p.toLowerCase())) {
+          connections.set(p, (connections.get(p) || 0) + 1);
+        }
+      });
+    });
+    return Array.from(connections.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, count]) => ({ name, count }));
+  }, [person]);
 
   // Filter activities
   const filteredActivities = person.activities.filter(activity => {
@@ -145,6 +160,28 @@ export function ProfilePage({ person, onPersonClick, onLocationClick }: ProfileP
                   <span>{stats.tips} Tips</span>
                 </div>
               </div>
+
+              {/* Connected Persons */}
+              {connectedPersons.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Strongest Connections</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {connectedPersons.map(cp => (
+                      <button
+                        key={cp.name}
+                        onClick={() => handlePersonLinkClick(cp.name)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium transition-colors border border-slate-200 dark:border-slate-700"
+                      >
+                        <User className="w-3.5 h-3.5 text-slate-400" />
+                        {cp.name}
+                        <span className="text-xs font-mono text-slate-400 dark:text-slate-500 bg-slate-200 dark:bg-slate-900 px-1.5 py-0.5 rounded-md ml-1">
+                          {cp.count}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -320,14 +357,14 @@ function TimelineItem({ activity, onPersonClick, onLocationClick }: TimelineItem
                     <span>From</span>
                     <button
                       onClick={() => onPersonClick(activity.sender!)}
-                      className="px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors"
+                      className="font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
                     >
                       {activity.sender}
                     </button>
                     <span>to</span>
                     <button
                       onClick={() => onPersonClick(activity.receiver!)}
-                      className="px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors"
+                      className="font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
                     >
                       {activity.receiver}
                     </button>
@@ -344,7 +381,7 @@ function TimelineItem({ activity, onPersonClick, onLocationClick }: TimelineItem
               <span className="text-slate-600 dark:text-slate-400 text-sm">Seen with</span>
               <button
                 onClick={() => onPersonClick(activity.seenWith!)}
-                className="px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors"
+                className="font-medium text-blue-600 dark:text-blue-400  cursor-pointer transition-colors"
               >
                 {activity.seenWith}
               </button>

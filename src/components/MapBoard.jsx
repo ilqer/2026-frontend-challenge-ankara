@@ -17,6 +17,24 @@ export function MapBoard({ evidence, onEvidenceClick }) {
     return evidence.filter(e => e.details.coordinates);
   }, [evidence]);
 
+  // Group evidence by location string to prevent duplicate markers
+  const groupedLocations = useMemo(() => {
+    const groups = new Map();
+    evidenceWithCoords.forEach((e) => {
+      const loc = e.details.location;
+      if (!groups.has(loc)) {
+        groups.set(loc, {
+          location: loc,
+          coordinates: e.details.coordinates,
+          events: [],
+          id: `loc-${loc.replace(/\s+/g, '-').toLowerCase()}`,
+        });
+      }
+      groups.get(loc).events.push(e);
+    });
+    return Array.from(groups.values());
+  }, [evidenceWithCoords]);
+
   // Calculate center of all markers
   const center = useMemo(() => {
     if (evidenceWithCoords.length === 0) return [39.9334, 32.8597]; // Ankara default
@@ -37,19 +55,30 @@ export function MapBoard({ evidence, onEvidenceClick }) {
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
-        {evidenceWithCoords.map((item) => (
+        {groupedLocations.map((group) => (
           <Marker
-            key={item.id}
-            position={item.details.coordinates}
+            key={group.id}
+            position={group.coordinates}
             eventHandlers={{
-              click: () => onEvidenceClick(item),
+              click: () => {
+                const syntheticEvent = {
+                  id: group.id,
+                  type: 'Location Summary',
+                  timestamp: group.events[0].timestamp,
+                  details: {
+                    location: group.location,
+                    coordinates: group.coordinates,
+                    content: `${group.events.length} connected events recorded at this territory.`,
+                  },
+                };
+                onEvidenceClick(syntheticEvent);
+              },
             }}
           >
             <Popup>
               <div className="text-sm">
-                <p className="font-semibold mb-1">{item.type.toUpperCase()}</p>
-                <p className="text-xs mb-1">{item.details.location}</p>
-                <p className="text-xs text-slate-600">{item.details.person}</p>
+                <p className="font-semibold mb-1">{group.location}</p>
+                <p className="text-xs text-slate-600">{group.events.length} events recorded here.</p>
               </div>
             </Popup>
           </Marker>
@@ -62,7 +91,7 @@ export function MapBoard({ evidence, onEvidenceClick }) {
           Evidence Markers
         </h3>
         <p className="text-xs text-slate-500 dark:text-slate-500 light:text-slate-700">
-          {evidenceWithCoords.length} locations plotted
+          {groupedLocations.length} locations plotted
         </p>
       </div>
     </div>

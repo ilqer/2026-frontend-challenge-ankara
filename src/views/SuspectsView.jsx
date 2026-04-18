@@ -40,7 +40,7 @@ export function SuspectsView({ evidence, onSuspectClick }) {
 
     facetedEvidence.forEach(e => {
       const person = e.details.person;
-      if (!person) return;
+      if (!person || ["unknown", "event staff"].includes(person.toLowerCase())) return;
 
       if (!suspectMap.has(person)) {
         suspectMap.set(person, {
